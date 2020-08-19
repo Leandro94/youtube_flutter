@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:youtube_flutter/CustomSearchDelegate.dart';
 import 'package:youtube_flutter/telas/Biblioteca.dart';
 import 'package:youtube_flutter/telas/EmAlta.dart';
 import 'package:youtube_flutter/telas/Inicio.dart';
@@ -11,28 +12,38 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _indiceAtual = 0;
-
+  String _resultado = "";
 
   @override
   Widget build(BuildContext context) {
     List<Widget> telas = [
-      Inicio(),
+      Inicio(_resultado),
       EmAlta(),
       Inscricao(),
       Biblioteca()
     ];
 
-
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(
-          color: Colors.grey
-        ),
+        iconTheme: IconThemeData(color: Colors.grey),
         backgroundColor: Colors.white,
-        title: Image.asset("assets/images/youtube.png",
-        width: 98,
-        height: 22,),
+        title: Image.asset(
+          "assets/images/youtube.png",
+          width: 98,
+          height: 22,
+        ),
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () async {
+              String res = await showSearch(
+                  context: context, delegate: CustomSearchDelegate());
+              setState(() {
+                _resultado = res;
+              });
+            },
+          ),
+          /*
           IconButton(
             icon: Icon(Icons.videocam),
             onPressed: (){
@@ -50,7 +61,7 @@ class _HomeState extends State<Home> {
             onPressed: (){
               print("acao: conta");
             },
-          )
+          )*/
         ],
       ),
       body: Container(
@@ -59,7 +70,7 @@ class _HomeState extends State<Home> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indiceAtual,
-        onTap: (indice){
+        onTap: (indice) {
           setState(() {
             _indiceAtual = indice;
           });
@@ -68,21 +79,13 @@ class _HomeState extends State<Home> {
         fixedColor: Colors.red,
         items: [
           BottomNavigationBarItem(
-            title: Text("Início"),
-            icon: Icon(Icons.home)
-          ),
+              title: Text("Início"), icon: Icon(Icons.home)),
           BottomNavigationBarItem(
-              title: Text("Em alta"),
-              icon: Icon(Icons.whatshot)
-          ),
+              title: Text("Em alta"), icon: Icon(Icons.whatshot)),
           BottomNavigationBarItem(
-              title: Text("Inscrições"),
-              icon: Icon(Icons.subscriptions)
-          ),
+              title: Text("Inscrições"), icon: Icon(Icons.subscriptions)),
           BottomNavigationBarItem(
-              title: Text("Biblioteca"),
-              icon: Icon(Icons.folder)
-          )
+              title: Text("Biblioteca"), icon: Icon(Icons.folder))
         ],
       ),
     );
